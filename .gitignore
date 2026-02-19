@@ -1,0 +1,7 @@
+# Python venv
+.venv/
+nlp_service/.venv/
+venv/
+__pycache__/
+*.pyc
+.env

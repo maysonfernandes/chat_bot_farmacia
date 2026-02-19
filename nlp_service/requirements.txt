@@ -1,0 +1,5 @@
+fastapi 0.129.0
+uvicorn 0.40.0
+spacy 3.8.11
+openai-whisper 20250625
+ffmpeg-python 0.2.0

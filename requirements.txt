@@ -1,0 +1,3 @@
+Instalando Dependencias
+
+npm install @whiskeysockets/baileys dotenv qrcode-terminal mysql2 axios

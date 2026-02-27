@@ -36,8 +36,8 @@ async function handle(context, intentFromMenu = null) {
 
     if (nlp?.intent === 'FALAR_ATENDENTE') {
       return {
-        text: '👨‍⚕️ Vou te encaminhar para um atendente. Um momento...',
-        nextState: 'AGUARDANDO_ATENDENTE'
+        text: formatter.txtFalarAtendente(),
+        nextState: 'HUMANO'
       };
     }
 
@@ -64,7 +64,7 @@ async function handle(context, intentFromMenu = null) {
      */
     if (intentFromMenu === 'BUSCAR_PRODUTO') {
       return {
-        text: 'Qual medicamento você procura?',
+        text: formatter.qualMedicamento(),
         nextState: 'BUSCA_PRODUTO'
       };
     }
@@ -79,7 +79,7 @@ async function handle(context, intentFromMenu = null) {
     console.error('🔥 Erro no flows:', err);
 
     return {
-      text: '⚠️ Ocorreu um erro ao processar sua solicitação. Tente novamente.',
+      text: formatter.erroFluxoPrincipal(),
       nextState: null
     };
   }
@@ -93,7 +93,7 @@ async function fluxoBuscaProduto(nlp) {
 
   if (!medicine) {
     return {
-      text: 'Qual medicamento você procura?',
+      text: formatter.qualMedicamento(),
       nextState: 'BUSCA_PRODUTO'
     };
   }

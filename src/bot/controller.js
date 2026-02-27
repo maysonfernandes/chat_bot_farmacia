@@ -8,6 +8,7 @@ const { delayComDigitando } = require('../services/typing.service');
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 const fs = require('fs');
 const path = require('path');
+const formatter = require('./formatter');
 
 
 module.exports = async (sock, msg) => {
@@ -59,6 +60,7 @@ module.exports = async (sock, msg) => {
   fs.unlink(filePath, () => {});
 }
 
+
     /**
      * ⏱ Rate limit
      */
@@ -73,7 +75,7 @@ module.exports = async (sock, msg) => {
      */
     if (!isFarmaciaAberta(isPlantao)) {
       return sock.sendMessage(jid, {
-        text: '⏰ A farmácia está fechada no momento.\n\n🕢 Horário:\nSeg–Sex: 07:30–19:00\nSábado: 07:30–13:00\nPlantão: 07:30–22:00'
+        text: formatter.farmaciaFechada()
       });
     }
 

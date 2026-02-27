@@ -1,35 +1,20 @@
 const db = require('../db/mysql');
 
+
+// Busca de produtos usando FULLTEXT
 async function buscarProduto(termo) {
-    const [rows] = await db.query(
-        `SELECT * FROM ta_preco_medicamento
-         WHERE MATCH(PRODUTO, SUBSTÂNCIA, LABORATÓRIO)
-         AGAINST (? IN NATURAL LANGUAGE MODE)
-         AND RESTRIÇÃO HOSPITALAR = Não
-         LIMIT 5`,
-        [termo]
-    );
-    return rows;
+  const sql = `
+    SELECT *
+    FROM TA_PRECO_MEDICAMENTO
+    WHERE MATCH(\`PRODUTO\`, \`SUBSTANCIA\`, \`LABORATORIO\`)
+    AGAINST (? IN NATURAL LANGUAGE MODE)
+    AND \`RESTRICAO_HOSPITALAR\` = 'Não'
+    LIMIT 5
+  `;
+  console.log("Termo buscado:", termo);
+  const [rows] = await db.query(sql, [termo]);
+  console.log("Rows encontrados:", rows);
+  return rows;
 }
 
-async function buscarPorCodigo(codigo) {
-    const [rows] = await db.query(
-        'SELECT * FROM produtos WHERE codigo = ? AND ativo = true',
-        [codigo]
-    );
-    return rows;
-}
-
-async function buscarBula(termo) {
-    const [rows] = await db.query(
-        `SELECT * FROM produtos
-         WHERE MATCH(nome, principio_ativo, categoria)
-         AGAINST (? IN NATURAL LANGUAGE MODE)
-         AND ativo = true
-         LIMIT 1`,
-        [termo]
-    );
-    return rows;
-}
-
-module.exports = { buscarProduto, buscarPorCodigo, buscarBula };
+module.exports = { buscarProduto };

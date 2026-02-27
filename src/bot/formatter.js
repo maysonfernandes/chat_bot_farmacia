@@ -1,3 +1,4 @@
+// Menu Inicial
 module.exports.menuInicial = () => `
 👋 Olá! Sou o assistente da *Hiper Popular Drogarias*.
 
@@ -7,39 +8,71 @@ Escolha uma opção:
 👤 Digite *atendente* para falar com um especialista.
 `.trim();
 
-module.exports.opcao_1 = () => `
-🔎 Qual produto deseja buscar?
+// Falar com atendente
+module.exports.txtfalarAtendente = () => `
+👨‍⚕️ Vou te encaminhar para um atendente. Um momento...
 `.trim();
 
-module.exports.opcao_2 = () => `
-🔎 Qual medicamento deseja buscar a Bula?
+// Mensagem de boas-vindas (plantão)
+module.exports.txtPlantao = () => `
+Olá! 👋  
+Posso te ajudar a encontrar medicamentos.  
+Exemplo: *"Tem dipirona?"*  
+
+Ou digite *menu* para ver as opções.
+
+⚠️ Atenção: *Estamos de Plantão*
+Estaremos prontos para te atender até às *22:00* horas.
 `.trim();
 
-module.exports.opcao_3 = () => `
-👤 Encaminhando para um atendente...
+// Mensagem de boas-vindas (horário normal)
+module.exports.txtNormal = () => `
+Olá! 👋  
+Posso te ajudar a encontrar medicamentos.  
+Exemplo: *"Tem dipirona?"*  
+
+Ou digite *menu* para ver as opções.
 `.trim();
 
-module.exports.falhaBuscaProduto = () => `
-❌ Produto não encontrado. Tente outro nome ou código.
+// Perguntando para o usuário qual medicamento ele procura
+module.exports.qualMedicamento = () => `
+🔎 Qual medicamento você procura?
 `.trim();
 
+// Mensagem de erro do fluxo principal
+module.exports.erroFluxoPrincipal = () => `
+⚠️ Ocorreu um erro ao processar sua solicitação. Tente novamente.
+`.trim();
+
+// Horário de funcionamento
+module.exports.farmaciaFechada = () => `
+⏰ A farmácia está fechada no momento.
+🕢 Horário:
+Seg-Sex: 07:30 - 19:00
+Sábado: 07:30 - 13:00
+Plantão: 07:30 - 22:00
+`.trim();
+
+// Mensagem de medicamentos retornados do banco de dados
 module.exports.produtos = (produtos) => {
     let msg = '💊 *Resultado da busca:*\n\n';
 
     produtos.forEach(p => {
-        msg += `• *${p.nome}*\n`;
-        msg += `🆔 ${p.codigo}\n`;
+        msg += `• *${p.PRODUTO}*\n`;
+        msg += `◻ ${p.APRESENTACAO}\n`;
+        msg += `🆔 ${p.EAN_1}\n`;
 
-        if (p.controlado) {
+        if (p.RESTRICAO_HOSPITALAR === 'Sim') {
             msg += '⚠️ Medicamento controlado\n';
             msg += '👉 Atendimento presencial\n\n';
         } else {
-            msg += `💰 ${Number(p.preco).toLocaleString('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
+            const valor = Number(p.PMC_Sem_Impostos.replace(',', '.'));
+            msg += `💰 ${valor.toLocaleString('pt-BR', { 
+            style: 'currency',
+            currency: 'BRL'
             })}\n`;
 
-            if (p.precisa_receita)
+            if (p.TARJA === 'Tarja Preta')
                 msg += '📄 Exige receita\n';
 
             msg += '\n';
@@ -49,28 +82,4 @@ module.exports.produtos = (produtos) => {
     return msg;
 };
 
-module.exports.bula = (bula) => {
-    let msg = '💊 *Resultado da busca:*\n\n';
-
-    bula.forEach(b => {
-        msg += `• *${b.nome}*\n`;
-        msg += ` ${b.bula}\n`;
-
-        if (b.controlado) {
-            msg += '⚠️ Medicamento controlado\n';
-            msg += '👉 Atendimento presencial\n\n';
-        } else {
-            // msg += `💰 ${Number(p.preco).toLocaleString('pt-BR', {
-            //     style: 'currency',
-            //     currency: 'BRL'
-            // })}\n`;
-
-            if (b.precisa_receita)
-                // msg += '📄 Exige receita\n';
-            msg += '\n';
-        }
-    });
-
-    return msg;
-};
 

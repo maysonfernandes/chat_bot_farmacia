@@ -1,4 +1,5 @@
-const isPlantao = true; // futuramente pode vir do banco
+const isPlantao = false; // futuramente pode vir do banco
+const formatter = require('../bot/formatter');
 
 function isFarmaciaAberta(isPlantao) {
   const agora = new Date();
@@ -38,23 +39,12 @@ function mensagemPlantao(isPlantao) {
 
   if (isPlantao === true) {
     msgPlantao = {
-      text: `Olá! 👋  
-Posso te ajudar a encontrar medicamentos.  
-Exemplo: *"Tem dipirona?"*  
-
-Ou digite *menu* para ver as opções.
-
-⚠️ Atenção: *Estamos de Plantão*
-Estaremos prontos para te atender até às *22:00* horas.`,
+      text: formatter.txtPlantao(),
       nextState: null
     };
   } else {
     msgPlantao = {
-      text: `Olá! 👋  
-Posso te ajudar a encontrar medicamentos.  
-Exemplo: *"Tem dipirona?"*  
-
-Ou digite *menu* para ver as opções.`,
+      text: formatter.txtNormal(),
       nextState: null
     };
   }

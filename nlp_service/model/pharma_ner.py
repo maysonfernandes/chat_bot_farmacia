@@ -1,24 +1,37 @@
 import spacy
 import re
+import mysql.connector
 
 nlp = spacy.load("pt_core_news_lg")
 
 DOSAGE_REGEX = r"\b\d+\s?(mg|ml|g|mcg)\b"
 
-KNOWN_MEDICINES = [
-    "dipirona",
-    "amoxicilina",
-    "ibuprofeno",
-    "paracetamol",
-    "azitromicina"
-]
+# Buscando medicamentos conhecidos no banco de dados para reconhecimento de entidades
+conn = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="farmacia_chatbot"
+)
 
+cursor = conn.cursor()
+cursor.execute("""
+    SELECT DISTINCT PRODUTO
+    FROM TA_PRECO_MEDICAMENTO
+    WHERE PRODUTO IS NOT NULL
+      AND PRODUTO <> '';
+""")
+
+KNOWN_MEDICINES = [row[0].lower() for row in cursor.fetchall()]
+
+# Intenções comuns e suas palavras-chave para classificação simples
 INTENT_KEYWORDS = {
-    "BUSCAR_PRODUTO": ["tem", "vende", "preço", "valor", "quanto custa", "dipirona", "amoxicilina", "ibuprofeno"],
+    "BUSCAR_PRODUTO": ["tem", "vende", "preço", "valor", "quanto custa"] ,
     "FALAR_ATENDENTE": ["atendente", "humano", "pessoa", "farmacêutico", "farmaceutico"],
     "MENU_INICIAL": ["menu", "opções", "opcoes", "início", "inicio", "voltar", "0"]
 }
 
+# Função para classificar a intenção do usuário com base em palavras-chave
 def classify_intent(text: str):
     t = text.lower()
 
@@ -28,7 +41,7 @@ def classify_intent(text: str):
 
     return "DESCONHECIDO"
 
-
+# Função principal para extrair entidades e classificar intenção
 def extract_entities(text: str):
     doc = nlp(text.lower())
 

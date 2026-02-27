@@ -3,5 +3,13 @@
 nlp_service/.venv/
 venv/
 __pycache__/
+nlp_service/__pycache__/
+nlp_service/model/__pycache__/
 *.pyc
-.env
+src/.env
+src/auth
+src/auth_info
+node_modules
+package-lock.json
+package.json
+TA_PRECO_MEDICAMENTO - Dicionario de Dados.pdf
